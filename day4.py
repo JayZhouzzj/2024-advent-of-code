@@ -1,4 +1,12 @@
+from collections import defaultdict
 import sys
+
+corners = [
+    (1, 1),
+    (1, -1),
+    (-1, 1),
+    (-1, -1),
+]
 
 
 def is_valid(x, y, rows, cols):
@@ -40,19 +48,35 @@ def find_xmas(board):
     # Iterate over every cell in the grid
     for i in range(rows):
         for j in range(cols):
-            if board[i][j] == word[0]:  # Start DFS if the first letter matches
-                # Try each direction
-                for direction in [
-                    "right",
-                    "left",
-                    "down",
-                    "up",
-                    "down-right",
-                    "down-left",
-                    "up-right",
-                    "up-left",
-                ]:
-                    if dfs(board, word, i, j, direction, rows, cols):
+            # if board[i][j] == word[0]:  # Start DFS if the first letter matches
+            #     # Try each direction
+            #     for direction in [
+            #         "right",
+            #         "left",
+            #         "down",
+            #         "up",
+            #         "down-right",
+            #         "down-left",
+            #         "up-right",
+            #         "up-left",
+            #     ]:
+            #         if dfs(board, word, i, j, direction, rows, cols):
+            #             count += 1
+            if (
+                board[i][j] == "A"
+                and i - 1 >= 0
+                and j - 1 >= 0
+                and i + 1 < rows
+                and j + 1 < rows
+            ):
+                counter = defaultdict(list)
+                for di, dj in corners:
+                    counter[board[i + di][j + dj]].append((i + di, j + dj))
+                if len(counter["M"]) == len(counter["S"]) == 2:
+                    if not (
+                        sum(x for x, y in counter["M"]) == i * 2
+                        and sum(y for x, y in counter["M"]) == j * 2
+                    ):
                         count += 1
 
     return count
